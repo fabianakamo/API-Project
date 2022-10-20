@@ -10,15 +10,29 @@ const insertData = async (
     name,
     email,
     password,
-  }: { name: string; email: string; password: string } = request.body;
+    confirmPassword,
+  }: {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  } = request.body;
   try {
     // jogar no middleware?
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !confirmPassword) {
       return response
         .status(400)
-        .json({ message: "Obrigatório os campos Nome, Email e Senha." });
+        .json({
+          message:
+            "Obrigatório os campos Nome, Email, Senha e Confirmação de Senha. ",
+        });
     }
-    const result = UserService.validation(name, email, password);
+    const result = UserService.validation(
+      name,
+      email,
+      password,
+      confirmPassword
+    );
     response.send(result);
   } catch (error) {
     // jogar no middleware?
