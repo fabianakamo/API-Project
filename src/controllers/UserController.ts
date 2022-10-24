@@ -20,20 +20,18 @@ const insertData = async (
   try {
     // jogar no middleware?
     if (!name || !email || !password || !confirmPassword) {
-      return response
-        .status(400)
-        .json({
-          message:
-            "Obrigatório os campos Nome, Email, Senha e Confirmação de Senha. ",
-        });
+      return response.status(400).json({
+        message:
+          "Obrigatório os campos Nome, Email, Senha e Confirmação de Senha. ",
+      });
     }
-    const result = UserService.validation(
+    const validate = UserService.validationData(
       name,
       email,
       password,
       confirmPassword
     );
-    response.send(result);
+    response.send(validate);
   } catch (error) {
     // jogar no middleware?
     next(error);

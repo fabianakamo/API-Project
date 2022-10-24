@@ -1,3 +1,5 @@
+import UserRepository from "../repositories/UserRepository";
+import crypto from "crypto";
 import * as yup from "yup";
 
 const regexName = new RegExp(/^([a-zA-Z]+([ ]?[a-zA-Z]+)*)$/);
@@ -5,7 +7,7 @@ const regexPasswords = new RegExp(
   /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/
 );
 
-const validation = (
+const validationData = (
   name: string,
   email: string,
   password: string,
@@ -30,6 +32,7 @@ const validation = (
       .oneOf([yup.ref("password"), null], "Passwords don't match."),
   });
 
+  // jogar erro no  middleware
   userSchema
     .validate({ name, email, password, confirmPassword })
     .catch(function (err) {
@@ -39,38 +42,26 @@ const validation = (
       // console.log(erro2);
     });
 
-  const result = console.log(name, email, password, confirmPassword);
-  return result;
+  const encryptedPassword = cryptoPassword(password);
+
+  // UserRepository encrypting
+
+  const result = console.log(name, email, encryptedPassword, confirmPassword);
+  return;
 };
 
-export default { validation };
+// bcrypt password
+const cryptoPassword = async (password: string) => {
+  const data = {
+    algorithm: "aes-256-cbc",
+    key: crypto.randomBytes(32),
+    iv: crypto.randomBytes(16),
+  };
+  const cipher = crypto.createCipheriv(data.algorithm, data.key, data.iv);
+  let encrypted = cipher.update(password);
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
+  let encryptedPassword = encrypted.toString("hex");
+  return encryptedPassword;
+};
 
-/* NAO FUNCIONA PQ?
-const validation = (
-  name: string,
-  email: string,
-  password: string,
-  confirmPassword: string
-) => {
-  let userSchema = yup.object().shape({
-    name: yup.string().required(),
-    email: yup.string().email().required("Email:"),
-    password: yup.string().required("Please enter your password"),
-    confirmPassword: yup.string().required("Please confirm your password"),
-  });
-
-  userSchema
-    .validate({
-      name: /^([a-zA-Z]+([ ]?[a-zA-Z]+)*)$/,
-      email: email,
-      password:
-        /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
-      confirmPassword: password,
-    })
-    .catch(function (err) {
-      const erro1 = err.name; // => 'ValidationError'
-      const erro2 = err.errors; // => ['Deve ser maior que 18']
-      console.log(erro1);
-      console.log(erro2);
-    });
-*/
+export default { validationData, cryptoPassword };
