@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import validationData from "../middleware/Validation";
 import UserService from "../services/UserService";
 
 const insertData = async (
@@ -6,34 +7,11 @@ const insertData = async (
   response: Response,
   next: NextFunction
 ) => {
-  const {
-    name,
-    email,
-    password,
-    confirmPassword,
-  }: {
-    name: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-  } = request.body;
   try {
-    // jogar no middleware?
-    if (!name || !email || !password || !confirmPassword) {
-      return response.status(400).json({
-        message:
-          "Obrigatório os campos Nome, Email, Senha e Confirmação de Senha. ",
-      });
-    }
-    const validate = UserService.validationData(
-      name,
-      email,
-      password,
-      confirmPassword
-    );
-    response.send(validate);
+    UserService.createUser(request.body);
+    response.status(200).json("Sucessooooooooooooo");
   } catch (error) {
-    // jogar no middleware?
+    console.log(error);
     next(error);
   }
 };
