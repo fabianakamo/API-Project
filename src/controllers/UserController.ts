@@ -8,10 +8,9 @@ const insertData = async (
   next: NextFunction
 ) => {
   try {
-    UserService.createUser(request.body);
+    await UserService.createUser(request.body);
     response.status(200).json("Sucessooooooooooooo");
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

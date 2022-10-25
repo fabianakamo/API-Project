@@ -10,7 +10,7 @@ const createUser = async ({ name, email, password }: UserType) => {
   try {
     const cryptedPassword = await helper.cryptoPassword(password);
     console.log(name, email, cryptedPassword);
-    const insert = UserRepository.writeData({
+    await UserRepository.writeData({
       name,
       email,
       password: cryptedPassword,
@@ -20,4 +20,9 @@ const createUser = async ({ name, email, password }: UserType) => {
   }
 };
 
-export default { createUser };
+const getEmail = async (email: string) => {
+  const verifyEmail = await UserRepository.verifyingEmail(email);
+  return verifyEmail;
+};
+
+export default { createUser, getEmail };

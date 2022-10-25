@@ -22,4 +22,18 @@ const writeData = async (user: UserType) => {
   }
 };
 
-export default { writeData };
+const verifyingEmail = async (email: string) => {
+  const verifyEmail = await knex
+    .select()
+    .from("users")
+    .where({ email })
+    .first();
+  // if (verifyEmail) {
+  //   throw new Error("Email já existe");
+  // }
+
+  // console.log(verifyEmail);
+  return verifyEmail;
+};
+
+export default { writeData, verifyingEmail };
