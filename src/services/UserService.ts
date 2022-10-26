@@ -6,10 +6,10 @@ export type UserType = {
   email: string;
   password: string;
 };
+
 const createUser = async ({ name, email, password }: UserType) => {
   try {
     const cryptedPassword = await helper.cryptoPassword(password);
-    console.log(name, email, cryptedPassword);
     await UserRepository.writeData({
       name,
       email,
@@ -21,8 +21,22 @@ const createUser = async ({ name, email, password }: UserType) => {
 };
 
 const getEmail = async (email: string) => {
-  const verifyEmail = await UserRepository.verifyingEmail(email);
+  const verifyEmail = await UserRepository.gettingEmail(email);
+
+  if (!verifyEmail) {
+    throw new Error("Não existe email cadastrado.");
+  }
   return verifyEmail;
 };
 
-export default { createUser, getEmail };
+const getPassword = async (password: string, email: string) => {
+  const encPassword = await UserRepository.gettingPassword(email);
+
+  const verifiedPassword = await helper.verifyingPassword(
+    password,
+    encPassword.password
+  );
+  return verifiedPassword;
+};
+
+export default { createUser, getEmail, getPassword };

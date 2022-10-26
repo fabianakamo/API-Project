@@ -9,12 +9,10 @@ const userLogin = async (
 ) => {
   try {
     const { email, password } = request.body;
-    const result = await UserService.getEmail(email);
+    const verifyEmail = await UserService.getEmail(email);
+    const verifyPassword = await UserService.getPassword(password, email);
 
-    // comparar senha
-    //const vefiryPassword = crypto.Verify
-    // }
-    response.send(result);
+    response.send(verifyPassword);
   } catch (error) {
     next(error);
   }

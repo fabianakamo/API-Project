@@ -3,12 +3,8 @@ import { UserType } from "../services/UserService";
 
 const writeData = async (user: UserType) => {
   try {
-    const verifyEmail = await knex
-      .select("email")
-      .from("users")
-      .where({ email: user.email })
-      .first();
-    if (verifyEmail) {
+    const checkEmail = await gettingEmail(user.email);
+    if (checkEmail) {
       throw new Error("Email já existe");
     }
 
@@ -22,18 +18,24 @@ const writeData = async (user: UserType) => {
   }
 };
 
-const verifyingEmail = async (email: string) => {
+const gettingEmail = async (email: string) => {
   const verifyEmail = await knex
-    .select()
+    .select("email")
     .from("users")
     .where({ email })
     .first();
-  // if (verifyEmail) {
-  //   throw new Error("Email já existe");
-  // }
 
-  // console.log(verifyEmail);
   return verifyEmail;
 };
 
-export default { writeData, verifyingEmail };
+const gettingPassword = async (email: string) => {
+  const verifyPassword = await knex
+    .select("password")
+    .from("users")
+    .where({ email })
+    .first();
+
+  return verifyPassword;
+};
+
+export default { writeData, gettingEmail, gettingPassword };
