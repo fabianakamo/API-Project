@@ -10,6 +10,9 @@ const cryptoPassword = async (password: string) => {
 
 const verifyingPassword = async (password: string, encPassword: string) => {
   const veryfiedPassword = await bcrypt.compare(password, encPassword);
+  if (veryfiedPassword === false) {
+    throw new Error("Senha incorreta");
+  }
   return veryfiedPassword;
 };
 

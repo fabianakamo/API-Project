@@ -3,7 +3,7 @@ import { UserType } from "../services/UserService";
 
 const writeData = async (user: UserType) => {
   try {
-    const checkEmail = await gettingEmail(user.email);
+    const checkEmail = await gettingData(user.email);
     if (checkEmail) {
       throw new Error("Email já existe");
     }
@@ -18,9 +18,9 @@ const writeData = async (user: UserType) => {
   }
 };
 
-const gettingEmail = async (email: string) => {
+const gettingData = async (email: string) => {
   const verifyEmail = await knex
-    .select("email")
+    .select()
     .from("users")
     .where({ email })
     .first();
@@ -28,14 +28,4 @@ const gettingEmail = async (email: string) => {
   return verifyEmail;
 };
 
-const gettingPassword = async (email: string) => {
-  const verifyPassword = await knex
-    .select("password")
-    .from("users")
-    .where({ email })
-    .first();
-
-  return verifyPassword;
-};
-
-export default { writeData, gettingEmail, gettingPassword };
+export default { writeData, gettingData };

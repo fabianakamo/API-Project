@@ -20,23 +20,22 @@ const createUser = async ({ name, email, password }: UserType) => {
   }
 };
 
-const getEmail = async (email: string) => {
-  const verifyEmail = await UserRepository.gettingEmail(email);
+const getUser = async (email: string) => {
+  const getData = await UserRepository.gettingData(email);
 
-  if (!verifyEmail) {
+  if (!getData) {
     throw new Error("Não existe email cadastrado.");
   }
-  return verifyEmail;
+  return getData;
 };
 
-const getPassword = async (password: string, email: string) => {
-  const encPassword = await UserRepository.gettingPassword(email);
-
+const getPassword = async (password: string, encPassword: string) => {
   const verifiedPassword = await helper.verifyingPassword(
     password,
-    encPassword.password
+    encPassword
   );
+
   return verifiedPassword;
 };
 
-export default { createUser, getEmail, getPassword };
+export default { createUser, getUser, getPassword };
