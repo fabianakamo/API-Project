@@ -1,7 +1,12 @@
-import UserRepository from "../repositories/UserRepository";
-import UserService from "../services/UserService";
-import * as yup from "yup";
 import { NextFunction, Request, Response } from "express";
+import * as yup from "yup";
+import jwt from "jsonwebtoken";
+import * as dotenv from "dotenv";
+dotenv.config();
+
+type JwtPayload = {
+  email: string;
+};
 
 const regexName = new RegExp(/^([a-zA-Z]+([ ]?[a-zA-Z]+)*)$/);
 const regexPasswords = new RegExp(
@@ -46,4 +51,30 @@ const validationData = async (
   }
 };
 
-export default { validationData };
+const validateToken = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const { authorization } = request.headers;
+  try {
+    const token = authorization!.split(" ")[1];
+
+    const { email } = jwt.verify(
+      token,
+      process.env.JWT_PASSWORD ?? ""
+    ) as JwtPayload;
+
+    if (!authorization) {
+      throw new Error("Não autorizado");
+    }
+
+    response.locals.email = email;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { validationData, validateToken };

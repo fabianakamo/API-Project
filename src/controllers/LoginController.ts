@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import * as dotenv from "dotenv";
-dotenv.config();
 import jwt from "jsonwebtoken";
 import UserService from "../services/UserService";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 const userLogin = async (
   request: Request,
@@ -17,9 +17,13 @@ const userLogin = async (
       user.password
     );
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_PASSWORD ?? "", {
-      expiresIn: "8h",
-    });
+    const token = jwt.sign(
+      { email: user.email },
+      process.env.JWT_PASSWORD ?? "",
+      {
+        expiresIn: "8h",
+      }
+    );
 
     const { password: _, ...userLogin } = user;
 

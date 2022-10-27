@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import validationData from "../middleware/Validation";
 import UserService from "../services/UserService";
 
 const insertData = async (
@@ -15,4 +14,24 @@ const insertData = async (
   }
 };
 
-export default { insertData };
+const getProfile = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const { authorization } = request.headers;
+  try {
+    if (!authorization) {
+      throw new Error("Não autorizado");
+    }
+
+    const user = await UserService.getUser(response.locals.email);
+
+    const { password: _, ...loggedProfile } = user;
+    return response.status(200).json(loggedProfile);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { insertData, getProfile };
