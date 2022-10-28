@@ -43,6 +43,9 @@ const validationData = async (
     next();
   } catch (error: any) {
     response.locals.status = 400;
+    if (error.code === "ER_DUP_ENTRY") {
+      response.locals.status = 409;
+    }
     // response.locals.stack = {
     //   [error.name]: error.message,
     //   yup: "Erro na validação do Yup do cadastro",

@@ -30,6 +30,7 @@ const getProfile = async (
     const { password: _, ...loggedProfile } = user;
     return response.status(200).json(loggedProfile);
   } catch (error) {
+    response.locals.status = 401;
     next(error);
   }
 };

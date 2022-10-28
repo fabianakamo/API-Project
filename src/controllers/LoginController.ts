@@ -28,8 +28,12 @@ const userLogin = async (
     const { password: _, ...userLogin } = user;
 
     response.status(200).json({ user: userLogin, token: token });
-  } catch (error) {
-    next(error);
+  } catch (err: any) {
+    response.locals.status = 400;
+    if (err === "JsonWebTokenError") {
+      response.locals.status = 401;
+    }
+    next(err);
   }
 };
 

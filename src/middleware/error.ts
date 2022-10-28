@@ -11,6 +11,7 @@ const errorHandler = async (
   if (statusCode === 500) {
     response.stack = err.stack;
   }
+
   res.status(statusCode).json(response);
 };
 
