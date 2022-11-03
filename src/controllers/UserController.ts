@@ -8,7 +8,7 @@ const insertData = async (
 ) => {
   try {
     await UserService.createUser(request.body);
-    response.status(200).json("Sucessooooooooooooo");
+    response.status(200).json({ message: "Sucessooooooooooooo" });
   } catch (error) {
     next(error);
   }
