@@ -4,7 +4,8 @@ const PORT = 4000;
 app.listen(PORT, () => {
   console.log(
     `
-      App listen on port: ${PORT}
+        Yep this is working 🍺 🎉 
+        App listen on port: ${PORT} 🥷
       `
   );
 });

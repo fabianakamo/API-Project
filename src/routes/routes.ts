@@ -1,7 +1,7 @@
-import { Router } from "express";
+import LoginController from "../controllers/LoginController";
 import UserController from "../controllers/UserController";
 import Validation from "../middleware/Validation";
-import LoginController from "../controllers/LoginController";
+import { Router } from "express";
 
 const router: Router = Router();
 
