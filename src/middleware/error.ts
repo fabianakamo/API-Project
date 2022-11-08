@@ -6,8 +6,8 @@ const errorHandler = async (
   res: Response,
   _next: NextFunction
 ) => {
-  const statusCode = res.locals.status ? res.locals.status : 500;
-  const response: any = { [err.name]: err.message };
+  const statusCode = err.status ? err.status : 500;
+  const response: any = { status: statusCode, [err.name]: err.message };
   if (statusCode === 500) {
     response.stack = err.stack;
   }

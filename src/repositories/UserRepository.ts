@@ -1,31 +1,33 @@
-import knex from "../database";
 import { UserType } from "../services/UserService";
+import knex from "../database";
 
 const writeData = async (user: UserType) => {
   try {
-    const checkEmail = await gettingData(user.email);
-    if (checkEmail) {
-      throw new Error("Email já existe");
-    }
-
     await knex("users").insert({
       name: user.name,
       email: user.email,
       password: user.password,
     });
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    throw { name: error.code, message: error.sqlMessage, status: 409 };
   }
 };
 
-const gettingData = async (email: string) => {
-  const verifyEmail = await knex
-    .select()
-    .from("users")
-    .where({ email })
-    .first();
+//consertare
+const gettingUserByEmail = async (email: string) => {
+  console.log(email);
+  try {
+    const verifyEmail = await knex
+      .select()
+      .from("users")
+      .where({ email })
+      .first();
 
-  return verifyEmail;
+    console.log(verifyEmail);
+    return verifyEmail;
+  } catch (error: any) {
+    throw { name: error.code, message: error.sqlMessage, status: error.status };
+  }
 };
 
-export default { writeData, gettingData };
+export default { writeData, gettingUserByEmail };

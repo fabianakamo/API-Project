@@ -10,22 +10,19 @@ export type UserType = {
 const createUser = async ({ name, email, password }: UserType) => {
   try {
     const cryptedPassword = await helper.cryptoPassword(password);
+
     await UserRepository.writeData({
       name,
       email,
       password: cryptedPassword,
     });
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    throw { name: error.code, message: error.sqlMessage, status: error.status };
   }
 };
 
 const getUser = async (email: string) => {
-  const getData = await UserRepository.gettingData(email);
-
-  if (!getData) {
-    throw new Error("Não existe email cadastrado.");
-  }
+  const getData = await UserRepository.gettingUserByEmail(email);
   return getData;
 };
 

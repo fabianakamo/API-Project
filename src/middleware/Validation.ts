@@ -42,15 +42,16 @@ const validationData = async (
 
     next();
   } catch (error: any) {
-    response.locals.status = 400;
-    if (error.code === "ER_DUP_ENTRY") {
-      response.locals.status = 409;
-    }
+    next({ name: error.name, message: error.message, status: 400 });
+    // response.locals.status = 400;
+    // if (error.code === "ER_DUP_ENTRY") {
+    //   response.locals.status = 409;
+    // }
+    // OU
     // response.locals.stack = {
     //   [error.name]: error.message,
     //   yup: "Erro na validação do Yup do cadastro",
     // };
-    next(error);
   }
 };
 
@@ -75,8 +76,8 @@ const validateToken = async (
     response.locals.email = email;
 
     next();
-  } catch (error) {
-    next(error);
+  } catch (error: any) {
+    next({ name: error.name, message: error.message, status: 400 });
   }
 };
 

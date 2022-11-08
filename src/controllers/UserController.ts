@@ -22,16 +22,16 @@ const getProfile = async (
   const { authorization } = request.headers;
   try {
     if (!authorization) {
-      throw new Error("Não autorizado");
+      throw new Error("Sem autorização");
+      // throw erro 401
     }
 
     const user = await UserService.getUser(response.locals.email);
 
     const { password: _, ...loggedProfile } = user;
     return response.status(200).json(loggedProfile);
-  } catch (error) {
-    response.locals.status = 401;
-    next(error);
+  } catch (error: any) {
+    next({ name: error.code, message: error.sqlMessage, status: error.status });
   }
 };
 

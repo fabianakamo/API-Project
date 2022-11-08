@@ -12,6 +12,7 @@ const userLogin = async (
   try {
     const { email, password } = request.body;
     const user = await UserService.getUser(email);
+
     const verifyPassword = await UserService.getPassword(
       password,
       user.password
@@ -28,12 +29,8 @@ const userLogin = async (
     const { password: _, ...userLogin } = user;
 
     response.status(200).json({ user: userLogin, token: token });
-  } catch (err: any) {
-    response.locals.status = 400;
-    if (err === "JsonWebTokenError") {
-      response.locals.status = 401;
-    }
-    next(err);
+  } catch (error: any) {
+    next(error);
   }
 };
 

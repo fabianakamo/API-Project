@@ -1,6 +1,5 @@
 // import crypto from "crypto";
 import * as bcrypt from "bcrypt";
-import { UserType } from "../services/UserService";
 
 const cryptoPassword = async (password: string) => {
   const salt = 10;
@@ -11,7 +10,8 @@ const cryptoPassword = async (password: string) => {
 const verifyingPassword = async (password: string, encPassword: string) => {
   const veryfiedPassword = await bcrypt.compare(password, encPassword);
   if (veryfiedPassword === false) {
-    throw new Error("Senha incorreta");
+    throw new Error("Invalid password");
+    // throw erro 401;
   }
   return veryfiedPassword;
 };
